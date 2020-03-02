@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Authors>Eugene Yarshevich</Authors>
+    <Version>0.1.0</Version>
+    <Copyright>Eugene Yarshevich, 2020</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileDownload.Common\FileDownload.Common.csproj" />
+  </ItemGroup>
+
+</Project>

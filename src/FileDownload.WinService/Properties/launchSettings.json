@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Console App": {
+      "commandName": "Project",
+      "commandLineArgs": "--console",
+      "environmentVariables": {
+        "NETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
