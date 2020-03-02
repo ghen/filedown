@@ -5,11 +5,22 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.WinService", "src\FileDownload.WinService\FileDownload.WinService.csproj", "{567AF577-9B43-459E-9071-20EDE03A5678}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Services", "src\FileDownload.Services\FileDownload.Services.csproj", "{2E14974D-ABB3-4D61-A100-2F83C193FD61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.Services", "src\FileDownload.Services\FileDownload.Services.csproj", "{2E14974D-ABB3-4D61-A100-2F83C193FD61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Common", "src\FileDownload.Common\FileDownload.Common.csproj", "{B58E63B4-6F90-4CD5-8695-5B800AE6C13A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.Common", "src\FileDownload.Common\FileDownload.Common.csproj", "{B58E63B4-6F90-4CD5-8695-5B800AE6C13A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Api", "src\FileDownload.Api\FileDownload.Api.csproj", "{28AAA183-09A7-4823-A438-CEC4B78A10F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.Api", "src\FileDownload.Api\FileDownload.Api.csproj", "{28AAA183-09A7-4823-A438-CEC4B78A10F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FC756ED7-4624-439A-A45E-5C477AB84B4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{92C8C874-2054-458C-B64F-8CED75E40789}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0211BCE-52B7-4564-AF32-FB8AA936F78E}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Data", "FileDownload.Data\FileDownload.Data.csproj", "{CAF72E99-7A7E-4A09-B068-4C2582EED13B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +44,20 @@ Global
 		{28AAA183-09A7-4823-A438-CEC4B78A10F6}.Debug|x64.Build.0 = Debug|x64
 		{28AAA183-09A7-4823-A438-CEC4B78A10F6}.Release|x64.ActiveCfg = Release|x64
 		{28AAA183-09A7-4823-A438-CEC4B78A10F6}.Release|x64.Build.0 = Release|x64
+		{CAF72E99-7A7E-4A09-B068-4C2582EED13B}.Debug|x64.ActiveCfg = Debug|x64
+		{CAF72E99-7A7E-4A09-B068-4C2582EED13B}.Debug|x64.Build.0 = Debug|x64
+		{CAF72E99-7A7E-4A09-B068-4C2582EED13B}.Release|x64.ActiveCfg = Release|x64
+		{CAF72E99-7A7E-4A09-B068-4C2582EED13B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{567AF577-9B43-459E-9071-20EDE03A5678} = {FC756ED7-4624-439A-A45E-5C477AB84B4C}
+		{2E14974D-ABB3-4D61-A100-2F83C193FD61} = {FC756ED7-4624-439A-A45E-5C477AB84B4C}
+		{B58E63B4-6F90-4CD5-8695-5B800AE6C13A} = {FC756ED7-4624-439A-A45E-5C477AB84B4C}
+		{28AAA183-09A7-4823-A438-CEC4B78A10F6} = {FC756ED7-4624-439A-A45E-5C477AB84B4C}
+		{CAF72E99-7A7E-4A09-B068-4C2582EED13B} = {FC756ED7-4624-439A-A45E-5C477AB84B4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35CC02F9-F7DF-45CF-87D9-2C2C4D39C470}

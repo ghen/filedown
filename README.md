@@ -77,13 +77,13 @@ Request format is defined by  **Content-Type** HTTP header, and response format 
 
 If desired format is not provided, **application/xml** is used as a **default** format (welcome to Microsoft's world!).
 
-### Common Data Types
+### Common Data Structures
 
 **File Link** details:
 
 | Property			 | Required | Type        | Description |
 | -------------- |:--------:|:-----------:| ----------- |
-| **filename**	 | Req      | String(24)  | Unique file name (unique in scope of current job only). |
+| **filename**	 | Req      | String(128) | Unique file name (unique in scope of current job only). |
 | **link**	     | Req      | String(1024) | Link to external file to be downloaded. |
 
 **Job Status** enumeration:
@@ -106,73 +106,12 @@ If desired format is not provided, **application/xml** is used as a **default** 
 
 | Property			 | Required | Type        | Description |
 | -------------- |:--------:|:-----------:| ----------- |
-| **filename**	 | Req      | String(24)  | Unique file name (unique in scope of current job only). |
+| **filename**	 | Req      | String(128) | Unique file name (unique in scope of current job only). |
 | **link**	     | Req      | String(1024) | Link to external file to be downloaded. |
 | **started**	   |          | Date        | Date and Time when file download started. Set to *<null>* until download started. |
 | **finished**	 |          | Date        | Date and Time when file download finished. Set to *<null>* until download finished (or faileD). |
 | **bytes**	     |          | Number      | Total bytes downloaded (if successful). Set to *<null>* unless download finished successfully. |
 | **error**	     |          | String(1024) | Error message (if download failed). Set to *<null>* unless download failed with error. |
-
-### [POST] /jobs
-
-Schedules new job to download one or more files.
-
-**Request**
-
-| Parameter         | Required | Type        | Description |
-| ----------------- |:--------:|:-----------:| ----------- |
-| **threads**	      | Req      | Number      | Level of parallelism. Should be a positive number. If set to **0** (zero) - default system settings will be used. Maximum allowed number of threads (per job) is **24**. |
-| **links**	        | Req      | List        | List of **File Links**. |
-
-**Response**
-
-| HTTP Status Code              | Description |
-| ----------------------------- | ----------- |
-| **200 OK**                    | New **Job** details are sent back in response body. |
-| **400 Bad Request**           | Incorrect (malformed) request. |
-
-**Example**
-
-Request:
-
-```
-POST /api/jobs HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-```
-
-```json
-{
-  "threads": 5,
-  "links": [
-    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
-    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
-  ]
-}
-```
-
-**Note:**
-> As shown in the example above, same file link might be requested to be saved under the different names. Yet **filename** is always unique in scope of the request (job).
-
-Response:
-
-```
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-```
-
-```json
-{
-  "id": "E1HKfn68Pkms5zsZsvKONw",
-  "status": "new",
-  "files": [
-    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
-    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
-  ]
-}
-```
 
 ### [GET] /jobs/{id}
 
@@ -241,3 +180,64 @@ Content-Type: application/json; charset=utf-8
 > * **picture.jpg** has been downloaded successfully
 > * **archive1.zip** download failed with error
 > * **archive2.zip** download is still in progress
+
+### [POST] /jobs
+
+Schedules new job to download one or more files.
+
+**Request**
+
+| Parameter         | Required | Type        | Description |
+| ----------------- |:--------:|:-----------:| ----------- |
+| **threads**	      | Req      | Number      | Level of parallelism. Should be a positive number. If set to **0** (zero) - default system settings will be used. Maximum allowed number of threads (per job) is **24**. |
+| **links**	        | Req      | List        | List of **File Links**. |
+
+**Response**
+
+| HTTP Status Code              | Description |
+| ----------------------------- | ----------- |
+| **200 OK**                    | New **Job** details are sent back in response body. |
+| **400 Bad Request**           | Incorrect (malformed) request. |
+
+**Example**
+
+Request:
+
+```
+POST /api/jobs HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+```
+
+```json
+{
+  "threads": 5,
+  "links": [
+    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
+    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
+    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
+  ]
+}
+```
+
+**Note:**
+> As shown in the example above, same file link might be requested to be saved under the different names. Yet **filename** is always unique in scope of the request (job).
+
+Response:
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+```
+
+```json
+{
+  "id": "E1HKfn68Pkms5zsZsvKONw",
+  "status": "new",
+  "files": [
+    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
+    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
+    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
+  ]
+}
+```

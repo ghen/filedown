@@ -12,13 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.2" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.6.1" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\FileDownload.Data\FileDownload.Data.csproj" />
     <ProjectReference Include="..\FileDownload.Api\FileDownload.Api.csproj" />
+    <ProjectReference Include="..\FileDownload.Common\FileDownload.Common.csproj" />
     <ProjectReference Include="..\FileDownload.Services\FileDownload.Services.csproj" />
   </ItemGroup>
 

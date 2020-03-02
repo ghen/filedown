@@ -2,14 +2,16 @@
 using System.Linq;
 using System.Reflection;
 
+using FileDownload.Api;
+using FileDownload.Data;
+using FileDownload.Extensions;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using NLog.Extensions.Logging;
-
-using FileDownload.Extensions;
 
 namespace FileDownload.WinService {
 
@@ -34,7 +36,8 @@ namespace FileDownload.WinService {
     /// <param name="args">Command line arguments.</param>
     private static Int32 Main(String[] args) {
       try {
-        Log.Warn($"{Program.AppVersionStr()} (build: {Program.BuildVersionStr()})");
+        var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
+        Log.Warn($"{assembly.VersionString()} (build: {assembly.BuildString()})");
 
         // NOTE: .NET Core 3.x CommandLineConfigurationProvider does not support "parameters with no value"
         //       See also: https://github.com/aspnet/Configuration/issues/780
@@ -63,6 +66,9 @@ namespace FileDownload.WinService {
           .ConfigureServices((hostContext, services) => services
             .AddOptions()
             .Configure<HostOptions>(hostContext.Configuration.GetSection("Host")))
+          .ConfigureDataProviders()
+          .ConfigureApiHost()
+          // .ConfigureServicesHost()
           .ConfigureAppConfiguration((_, config) => config
             .AddCommandLine(args));
 
@@ -119,43 +125,6 @@ namespace FileDownload.WinService {
     }
 
     #endregion Main
-
-    #region Internal helpers
-
-    /// <summary>
-    /// Reports application name and version.
-    /// </summary>
-    /// <returns>Application name and version.</returns>
-    public static String AppVersionStr() {
-      var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
-      var version = assembly.GetName().Version.ToString(3);
-      var title = ((AssemblyTitleAttribute)assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), true)[0])
-          .Title;
-
-      var res = $"{title} v{version}";
-      return res;
-    }
-
-    /// <summary>
-    /// Reports full build version.
-    /// </summary>
-    /// <returns>Full build version.</returns>
-    public static String BuildVersionStr() {
-      var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
-      var version = ((AssemblyInformationalVersionAttribute)assembly.GetCustomAttributes(typeof(AssemblyInformationalVersionAttribute), true)
-          .FirstOrDefault())?.InformationalVersion ?? assembly.GetName().Version.ToString();
-
-      var conf = (String)null;
-#if DEBUG
-      conf = ((AssemblyConfigurationAttribute)assembly.GetCustomAttributes(
-          typeof(AssemblyConfigurationAttribute), true)[0]).Configuration;
-#endif
-
-      var res = $"v{version}{(!String.IsNullOrEmpty(conf) ? $" ({conf})" : String.Empty)}";
-      return res;
-    }
-
-    #endregion Internal helpers
 
   }
 
