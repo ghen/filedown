@@ -60,6 +60,13 @@ namespace FileDownload.Data {
     [Required, MaxLength(20)]
     public JobStatus Status { get; set; }
 
+    /// <summary>
+    /// Level of parallelism. If set to <value>0</value> (zero), default system settings would apply.
+    /// </summary>
+    [DataMember(Name = "threads")]
+    [Required, Range(0, 24)]
+    public Int32 Threads { get; set; }
+
     #endregion Properties
 
     #region Navigation properties

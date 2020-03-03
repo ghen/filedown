@@ -1,8 +1,10 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
+using FileDownload.Api.Models;
 using FileDownload.Data;
 using FileDownload.Types;
 
@@ -39,12 +41,12 @@ namespace FileDownload.Api.Controllers {
 
     #endregion Constructor and Initialization
 
-    #region [Get] api/[controller]/{id}
+    #region [Get] [controller]/{id}
 
     /// <summary>
     /// Reports <seealso cref="Job"/> status and associated <seealso cref="File"/>(s) details.
     /// </summary>
-    /// 
+    /// <param name="id">Unique <seealso cref="Job"/> identifier.</param>
     /// <returns>List of matching records or empty set.</returns>
     [HttpGet, Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,31 +67,73 @@ namespace FileDownload.Api.Controllers {
 
       var db = this._context;
 
-      // DEBUG: temporary code to inject new records into the storage
-      var job = new Job(jobId) {
-        Status = JobStatus.Created,
-        Files = new[] {
-          new File(jobId, $"picture.jpg") { Url = "http://example.com/image.jpg", StartedAt = DateTimeOffset.Now, FinishedAt = DateTimeOffset.Now.AddSeconds(3), Size = 1024, Bytes = 1024 },
-          new File(jobId, $"archive1.zip") { Url = "http://example.com/archive.zip", StartedAt = DateTimeOffset.Now, FinishedAt = DateTimeOffset.Now.AddSeconds(3), Size = 10240, Bytes = 0, Error = "HTTP 404 - Not Found" },
-          new File(jobId, $"archive2.zip") { Url = "http://test.com/archive.zip", StartedAt = DateTimeOffset.Now, Size = 10240 }
-        }
-      };
-      await db.AddAsync(job);
-      await db.SaveChangesAsync();
-      // END DEBUG
-
       var qry = db.Set<Job>().AsQueryable()
-        .Include(e => e.Files);
-      var res = await qry.ToListAsync();
+        .Include(e => e.Files)
+        .Where(j => j.Id == jobId);
+      var res = await qry.SingleOrDefaultAsync();
 
       //
       // Report result
       //
 
+      if (res == null) return NotFound();
       return Ok(res);
     }
 
-    #endregion [Get] api/[controller]
+    #endregion [Get] [controller]
+
+    #region [Post] [controller]
+
+    /// <summary>
+    /// Creates new <seealso cref="Job"/>.
+    /// </summary>
+    /// <param name="files">List of <seealso cref="File"/>(s) to download.</param>
+    /// <returns>Newly created <seealso cref="Job"/> details.</returns>
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Job>> CreateJob(CreateJobModel data) {
+
+      //
+      // Validate input
+      //
+
+      if (data == null) return BadRequest();
+
+      //
+      // Perform action
+      //
+
+      var db = this._context;
+
+      var jobId = ShortGuid.NewGuid();
+      var job = new Job(jobId) {
+        Status = JobStatus.Created,
+        Threads = data.Threads,
+        Files = data.Links.Select(f => new File(jobId, f.Name) { Url = f.Url }).ToArray()
+      };
+      db.Add(job);
+
+      try {
+        await db.SaveChangesAsync();
+      } catch (DbUpdateException ex) {
+        var dbEx = ex.InnerException as System.Data.Common.DbException;
+        if (dbEx != null)
+          return ValidationProblem(new ValidationProblemDetails(new Dictionary<String, String[]>() {
+            { $"{dbEx.ErrorCode}", new [] { dbEx.Message } }
+          }));
+
+        throw;
+      }
+
+      //
+      // Report result
+      //
+
+      return CreatedAtAction("Get", new { id = job.Id }, job);
+    }
+
+    #endregion [Post] [controller]
 
   }
 
