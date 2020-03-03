@@ -9,7 +9,7 @@ namespace FileDownload.Data {
   #region [File type definition]
 
   /// <summary>
-  /// Stores File details.
+  /// Stores <see cref="File"/> details.
   /// </summary>
   [DataContract]
   public sealed class File {
@@ -33,7 +33,6 @@ namespace FileDownload.Data {
     /// <summary>
     /// Uniqueue <see cref="Job"/> identifier.
     /// </summary>
-    [DataMember(Name = "job")]
     [Required]
     public ShortGuid JobId { get; private set; }
 
@@ -64,6 +63,12 @@ namespace FileDownload.Data {
     public DateTimeOffset? FinishedAt { get; set; }
 
     /// <summary>
+    /// File size (bytes) to download (where available).
+    /// </summary>
+    [DataMember(Name = "size")]
+    public Int32? Size { get; set; }
+
+    /// <summary>
     /// Total bytes downloaded (if successful).
     /// </summary>
     [DataMember(Name = "bytes")]
@@ -77,15 +82,6 @@ namespace FileDownload.Data {
     public String Error { get; set; }
 
     #endregion Properties
-
-    #region Navigation properties
-
-    /// <summary>
-    /// Job this entity belongs to.
-    /// </summary>
-    // public Job Job { get; set; }
-
-    #endregion Navigation properties
 
     #region ToString
 

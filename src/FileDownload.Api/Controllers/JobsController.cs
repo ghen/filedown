@@ -66,14 +66,20 @@ namespace FileDownload.Api.Controllers {
       var db = this._context;
 
       // DEBUG: temporary code to inject new records into the storage
-      var file = new File(jobId, $"{jobId}.tmp") {
-        Url = String.Empty
+      var job = new Job(jobId) {
+        Status = JobStatus.Created,
+        Files = new[] {
+          new File(jobId, $"picture.jpg") { Url = "http://example.com/image.jpg", StartedAt = DateTimeOffset.Now, FinishedAt = DateTimeOffset.Now.AddSeconds(3), Size = 1024, Bytes = 1024 },
+          new File(jobId, $"archive1.zip") { Url = "http://example.com/archive.zip", StartedAt = DateTimeOffset.Now, FinishedAt = DateTimeOffset.Now.AddSeconds(3), Size = 10240, Bytes = 0, Error = "HTTP 404 - Not Found" },
+          new File(jobId, $"archive2.zip") { Url = "http://test.com/archive.zip", StartedAt = DateTimeOffset.Now, Size = 10240 }
+        }
       };
-      await db.AddAsync(file);
+      await db.AddAsync(job);
       await db.SaveChangesAsync();
       // END DEBUG
 
-      var qry = db.Set<File>().AsQueryable();
+      var qry = db.Set<Job>().AsQueryable()
+        .Include(e => e.Files);
       var res = await qry.ToListAsync();
 
       //

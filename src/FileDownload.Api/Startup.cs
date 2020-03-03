@@ -49,6 +49,14 @@ namespace FileDownload.Api {
       services
         .AddRouting()
         .AddControllers()
+        // TODO: Wait for proper System.Text.Json support to System.Runtime.Serialization in .NET Core 3.x
+        //       and remove Microsoft.AspNetCore.Mvc.NewtonsoftJson package dependency
+        //       See also: https://github.com/dotnet/runtime/issues/29975
+        .AddNewtonsoftJson(options => {
+          options.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
+          options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+        })
+        // END TOTO
         .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);
 
     #endregion ConfigureServices

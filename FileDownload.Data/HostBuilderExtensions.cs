@@ -32,18 +32,18 @@ namespace FileDownload.Data {
 
       hostBuilder
         .ConfigureServices((hostContext, services) => {
-          var assembly = Assembly.GetAssembly(typeof(HostBuilderExtensions));
-          var options = new DbContextOptionsBuilder<AppDb>()
-            // NOTE: For the purpose of this demo application we are going to use in-memory database
-            // .UseSqlServer(this.Configuration.GetConnectionString(nameof(AppDb))
-            .UseInMemoryDatabase(databaseName: assembly.GetName().Name)
-            // NOTE: Forbid client-side queries evaluations
-            //       https://docs.microsoft.com/en-au/ef/core/querying/client-eval
-            // .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
-            .Options;
-
           services
             .AddScoped<DbContext>(serviceProvider => {
+              var assembly = Assembly.GetAssembly(typeof(HostBuilderExtensions));
+              var options = new DbContextOptionsBuilder<AppDb>()
+                // NOTE: For the purpose of this demo application we are going to use in-memory database
+                // .UseSqlServer(this.Configuration.GetConnectionString(nameof(AppDb))
+                .UseInMemoryDatabase(databaseName: assembly.GetName().Name)
+                // NOTE: Forbid client-side queries evaluations
+                //       https://docs.microsoft.com/en-au/ef/core/querying/client-eval
+                // .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning))
+                .Options;
+
               return new AppDb(options);
             });
         });

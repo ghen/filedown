@@ -21,12 +21,6 @@ namespace FileDownload.Data.EntitiesConfiguration {
 
       builder.Property(e => e.JobId)
         .HasConversion<Guid>(val => val.Guid, val => new Types.ShortGuid(val)).IsUnicode(false);
-      /*
-      builder
-        .HasOne(e => e.Job)
-        .WithMany()
-        .HasForeignKey(e => e.JobId);
-      */
     }
 
     #endregion IEntityStatusConfiguration implementation

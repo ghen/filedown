@@ -90,9 +90,9 @@ If desired format is not provided, **application/xml** is used as a **default** 
 
 | Value          | Description |
 | -------------- | ----------- |
-| **New**        | Job has been accepted (scheduled). |
-| **Active**     | Job is currently running. |
-| **Done**       | Job has been completed. |
+| **Created**    | Job has been accepted (scheduled). |
+| **Processing** | Job is currently running. |
+| **Complete**   | Job has been completed. |
 
 **Job** details:
 
@@ -110,6 +110,7 @@ If desired format is not provided, **application/xml** is used as a **default** 
 | **link**	     | Req      | String(1024) | Link to external file to be downloaded. |
 | **started**	   |          | Date        | Date and Time when file download started. Set to *<null>* until download started. |
 | **finished**	 |          | Date        | Date and Time when file download finished. Set to *<null>* until download finished (or faileD). |
+| **size**	     |          | Number      | File size (bytes) to download (where available). Set to *<null>* until download srtarted. |
 | **bytes**	     |          | Number      | Total bytes downloaded (if successful). Set to *<null>* unless download finished successfully. |
 | **error**	     |          | String(1024) | Error message (if download failed). Set to *<null>* unless download failed with error. |
 
@@ -150,26 +151,29 @@ Content-Type: application/json; charset=utf-8
 ```json
 {
   "id": "E1HKfn68Pkms5zsZsvKONw==",
-  "status": "new",
+  "status": "Processing",
   "files": [
     { 
       "filename": "picture.jpg", 
       "link": "http://example.com/image.jpg",
-      "started": "",
-      "finished": "",
+      "started": "2020-03-03T15:27:50+03:00",
+      "finished": "2020-03-03T15:27:53+03:00",
+      "size": 1024,
       "bytes": 1024
     },
     {
       "filename": "archive1.zip",
       "link": "http://example.com/archive.zip",
-      "started": "",
-      "finished": "",
-      "error": ""
+      "started": "2020-03-03T15:27:50+03:00",
+      "finished": "2020-03-03T15:27:53+03:00",
+      "size": 10240,
+      "error": "HTTP 404 - Not Found"
     },
     {
       "filename": "archive2.zip",
-      "link": "http://test.com/archive.zip",
-      "started": ""
+      "link": "http://example.com/archive.zip",
+      "started": "2020-03-03T15:27:50+03:00",
+      "size": 10240,
     }
   ]
 }
@@ -215,7 +219,7 @@ Content-Type: application/json
   "links": [
     { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
     { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
+    { "filename": "archive2.zip", "link": "http://example.com/archive.zip" }
   ]
 }
 ```
@@ -233,11 +237,11 @@ Content-Type: application/json; charset=utf-8
 ```json
 {
   "id": "E1HKfn68Pkms5zsZsvKONw",
-  "status": "new",
+  "status": "Created",
   "files": [
     { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
     { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://test.com/archive.zip" }
+    { "filename": "archive2.zip", "link": "http://example.com/archive.zip" }
   ]
 }
 ```
