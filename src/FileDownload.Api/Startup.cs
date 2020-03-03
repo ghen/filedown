@@ -55,6 +55,13 @@ namespace FileDownload.Api {
         .AddNewtonsoftJson(options => {
           options.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
           options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+          
+          // NOTE: Trim milliseconds from default ISO DateTime format string
+          options.SerializerSettings.Converters.Add(
+            new Newtonsoft.Json.Converters.IsoDateTimeConverter {
+              DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fffzzz"
+            }
+          );
         })
         // END TOTO
         .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_3_0);

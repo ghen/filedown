@@ -75,7 +75,7 @@ Request format is defined by  **Content-Type** HTTP header, and response format 
     Content-Type: application/json
     Accept: application/json
 
-If desired format is not provided, **application/xml** is used as a **default** format (welcome to Microsoft's world!).
+If desired format is not provided, **application/json** is used by default.
 
 ### Common Data Structures
 
@@ -108,8 +108,8 @@ If desired format is not provided, **application/xml** is used as a **default** 
 | -------------- |:--------:|:-----------:| ----------- |
 | **filename**	 | Req      | String(128) | Unique file name (unique in scope of current job only). |
 | **link**	     | Req      | String(1024) | Link to external file to be downloaded. |
-| **started**	   |          | Date        | Date and Time when file download started. Set to *<null>* until download started. |
-| **finished**	 |          | Date        | Date and Time when file download finished. Set to *<null>* until download finished (or faileD). |
+| **started**	   |          | Date        | Date and Time (ISO 8601) when file download started. Set to *<null>* until download started. |
+| **finished**	 |          | Date        | Date and Time (ISO 8601) when file download finished. Set to *<null>* until download finished (or faileD). |
 | **size**	     |          | Number      | File size (bytes) to download (where available). Set to *<null>* until download srtarted. |
 | **bytes**	     |          | Number      | Total bytes downloaded (if successful). Set to *<null>* unless download finished successfully. |
 | **error**	     |          | String(1024) | Error message (if download failed). Set to *<null>* unless download failed with error. |
@@ -156,23 +156,23 @@ Content-Type: application/json; charset=utf-8
     { 
       "filename": "picture.jpg", 
       "link": "http://example.com/image.jpg",
-      "started": "2020-03-03T15:27:50+03:00",
-      "finished": "2020-03-03T15:27:53+03:00",
+      "started": "2020-03-03T15:27:50.034+03:00",
+      "finished": "2020-03-03T15:27:53.345+03:00",
       "size": 1024,
       "bytes": 1024
     },
     {
       "filename": "archive1.zip",
       "link": "http://example.com/archive.zip",
-      "started": "2020-03-03T15:27:50+03:00",
-      "finished": "2020-03-03T15:27:53+03:00",
+      "started": "2020-03-03T15:27:50.123+03:00",
+      "finished": "2020-03-03T15:27:53.354+03:00",
       "size": 10240,
       "error": "HTTP 404 - Not Found"
     },
     {
       "filename": "archive2.zip",
       "link": "http://example.com/archive.zip",
-      "started": "2020-03-03T15:27:50+03:00",
+      "started": "2020-03-03T15:27:50.678+03:00",
       "size": 10240,
     }
   ]
