@@ -2,16 +2,44 @@
 
 **FileDownloader** is a simple HTTP REST SPI service built with .NET Core 3.x, that allows clients to schedule and track multiple files download jobs.
 
-## Requirements
+### Design Overview
 
-* **Windows 7 (64 bit)** or higher
-* **.NET Core 3.1 Runtime** or later
+![alt text](doc/Design%20Overview.png "Design Overview")
+
+**Note:**
+> For simplicity proper **Persistent Queue Manager** is not included. Instead, In-memory Queue is exposed directly to REST API Controller via Dependency Injection. DO NOT USE THIS CODE IN PRODUCTION!!
+
+**Note:**
+> Current implementation does not retry to download files. Full implementation should use retry logic with **exponential backoff**.
+
+### Key Files
+
+| File          | Description |
+| ------------- | ----------- |
+| ./src/FileDownload.WinService/**Program.cs** | Application startup and host initialization logic. |
+| ./src/FileDownload.Data/**HostBuilderExtensions.cs** | Registers in-memory relational database as primary data source for the application. Means all data is purged when application stopped. |
+| ./src/FileDownload.Services/**HostBuilderExtensions.cs** | Registers **BlockingCollection<T>** as concurrent in-memory queue. |
+| ./src/FileDownload.Services/FileDownload/**FileDownloadService.cs** | File download logic. Service uses **PLINQ** to process jobs and files in parallel. |
+| ./src/FileDownload.Api/Controllers/**JobsController.cs** | REST API controller to create/read JOB(s). |
 
 ## Clone
 
+```bash
+> git clone https://github.com/ghen/filedown.git filedown
+```
+
 ## Build
 
+```bash
+> cd filedown
+> dotnet build
+```
+
 ## Test
+
+```bash
+> dotnet test
+```
 
 ## Run
 
@@ -19,7 +47,8 @@ For local testing (and production troubleshooting) application can be run in **c
 
 * To run application in **console mode** use ***--console*** command line switch:
 
-  ```
+  ```bash
+  > cd ./src/FileDownload.WinService/bin/x64/Debug/netcoreapp3.1/win10-x64
   > filedown --console
   ```
 
@@ -29,6 +58,11 @@ For local testing (and production troubleshooting) application can be run in **c
 > During development application can be run from **Microsoft Visual Studio** IDE directly. It will execute in **console mode** by default.
 
 ## Service Installation
+
+### Prerequisites
+
+* **Windows 7 (64 bit)** or higher
+* **.NET Core 3.1 Runtime** or later
 
 Application can be installed as a local service using scripts provided in **./scripts**. No special tools are needed (other than **.NET Core 3.1 Runtime** being installed). User would also require elevated rights in order to install or uninstall service under the **Windows** operating system.
 
@@ -72,9 +106,7 @@ Supported settings:
 
 Structured logs are sent to console (in console mode only), as well as saved to local file system as instructed in **./nlog.config** file. Application should also be configured to have sufficient privileges to access logs files location.
 
-Sample console output is shown bellow:
-
-![Console Output](/doc/Console Output.png)
+![alt text](doc/Console%20Output.png "Console Output")
 
 ## REST API
 
@@ -172,7 +204,7 @@ Content-Type: application/json; charset=utf-8
    "files":[
       {
          "filename":"Solar System.jpg",
-         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg",
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Solar System.jpg",
          "started":"2020-03-05T01:30:43.916+03:00",
          "finished":"2020-03-05T01:31:03.620+03:00",
          "size":83327,
@@ -180,7 +212,7 @@ Content-Type: application/json; charset=utf-8
       },
       {
          "filename":"Bypass Capacitors.pdf",
-         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf",
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Bypass Capacitors.pdf",
          "started":"2020-03-05T01:30:43.916+03:00",
          "size":549158,
          "bytes":171128
@@ -237,11 +269,11 @@ Content-Type: application/json
   "links": [
     { 
       "filename": "Solar System.jpg",
-      "link": "https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg"
+      "link": "https://github.com/ghen/filedown/raw/master/test/resources/Solar System.jpg"
     },
     { 
       "filename": "Bypass Capacitors.pdf",
-      "link": "https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf"
+      "link": "https://github.com/ghen/filedown/raw/master/test/resources/Bypass Capacitors.pdf"
     },
     { 
       "filename": "Ops.tmp",
@@ -269,11 +301,11 @@ Content-Type: application/json; charset=utf-8
    "files":[
       {
          "filename":"Solar System.jpg",
-         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg"
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Solar System.jpg"
       },
       {
          "filename":"Bypass Capacitors.pdf",
-         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf"
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Bypass Capacitors.pdf"
       },
       {
          "filename":"Ops.tmp",

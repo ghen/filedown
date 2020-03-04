@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,9 +116,11 @@ namespace FileDownload.Api.Controllers {
         Threads = data.Threads,
         Files = data.Links.Select(f => new File(jobId, f.Name) { Url = f.Url }).ToArray()
       };
-      db.Add(job);
 
+      // HACK: Simplified Job(s) queue integration.
+      // NOTE: DO NOTE USE THIS CODE IN PRODUCTION!!
       try {
+        db.Add(job);
         await db.SaveChangesAsync();
       } catch (DbUpdateException ex) {
         var dbEx = ex.InnerException as System.Data.Common.DbException;
@@ -131,8 +132,6 @@ namespace FileDownload.Api.Controllers {
         throw;
       }
 
-      // HACK: Simplified Job(s) queue integration.
-      // NOTE: DO NOTE USE THIS CODE IN PRODUCTION!!
       var queue = this._queue;
       if (queue != null && !queue.TryAdd(job, TimeSpan.FromMilliseconds(500)))
         Log.Warn("Job {id} has been created, but was not queued for processing and will be ignored.", job.Id);

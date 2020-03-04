@@ -7,7 +7,6 @@ using System.Threading;
 
 using FileDownload.Data;
 using FileDownload.Extensions;
-using FileDownload.Types;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
