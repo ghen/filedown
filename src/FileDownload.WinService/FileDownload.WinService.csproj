@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FileDownload.Data\FileDownload.Data.csproj" />
+    <ProjectReference Include="..\FileDownload.Data\FileDownload.Data.csproj" />
     <ProjectReference Include="..\FileDownload.Api\FileDownload.Api.csproj" />
     <ProjectReference Include="..\FileDownload.Common\FileDownload.Common.csproj" />
     <ProjectReference Include="..\FileDownload.Services\FileDownload.Services.csproj" />

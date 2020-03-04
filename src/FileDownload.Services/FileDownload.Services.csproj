@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FileDownload.Data\FileDownload.Data.csproj" />
+    <ProjectReference Include="..\FileDownload.Data\FileDownload.Data.csproj" />
     <ProjectReference Include="..\FileDownload.Common\FileDownload.Common.csproj" />
   </ItemGroup>
 

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\FileDownload.Common\FileDownload.Common.csproj" />
+    <ProjectReference Include="..\FileDownload.Common\FileDownload.Common.csproj" />
   </ItemGroup>
 
 </Project>

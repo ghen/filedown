@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.Common", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileDownload.Api", "src\FileDownload.Api\FileDownload.Api.csproj", "{28AAA183-09A7-4823-A438-CEC4B78A10F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Data", "src\FileDownload.Data\FileDownload.Data.csproj", "{CAF72E99-7A7E-4A09-B068-4C2582EED13B}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FC756ED7-4624-439A-A45E-5C477AB84B4C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{92C8C874-2054-458C-B64F-8CED75E40789}"
@@ -19,8 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDownload.Data", "FileDownload.Data\FileDownload.Data.csproj", "{CAF72E99-7A7E-4A09-B068-4C2582EED13B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

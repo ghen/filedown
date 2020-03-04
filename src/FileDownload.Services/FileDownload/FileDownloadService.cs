@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 
 using FileDownload.Data;
@@ -129,11 +130,47 @@ namespace FileDownload.Services {
 
         Log.Debug("Downloading {file}...", file);
         file.StartedAt = DateTimeOffset.Now;
+        file.FinishedAt = null;
+        file.Size = 0;
+        file.Bytes = null;
         file.Error = null;
         UpdateFileDetails(file);
 
-        // TODO: ...
-        System.Threading.Thread.Sleep(TimeSpan.FromSeconds(new Random().Next(1, 5)));
+        using (var client = new HttpClient()) {
+          var resp = client.GetAsync(file.Url, HttpCompletionOption.ResponseHeadersRead, cancellationToken: cancellationToken)
+            .GetAwaiter().GetResult();
+
+          resp.EnsureSuccessStatusCode();
+          if (resp.Content != null) {
+            file.Size = (Int32)(resp.Content.Headers.ContentLength ?? 0);     // TODO: Ops... Possible overflow!!
+            file.Bytes = 0;
+            UpdateFileDetails(file);
+
+            var path = System.IO.Path.Combine(conf.Downloads, file.JobId, file.Name);
+            var fileInfo = new System.IO.FileInfo(path);
+            if (!fileInfo.Directory.Exists) fileInfo.Directory.Create();
+
+            const Int32 TRANSFER_BUFFER_SIZE = 8 * 1024;
+            using (var dest = new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write, System.IO.FileShare.None, TRANSFER_BUFFER_SIZE, true))
+            // TODO: Double-check that ReadAsStreamAsync(..) does not read the whole stream into local memory buffer!
+            using (var src = resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()) {
+              // NOTE: CopyToAsync(..) does not provide any progress info
+              // src.CopyToAsync(dest, cancellationToken: cancellationToken);
+
+              var len = 0;
+              var buf = new Byte[TRANSFER_BUFFER_SIZE];
+              while ((len = src.Read(buf, 0, buf.Length)) > 0) {
+                dest.Write(buf, 0, len);
+
+                // NOTE: Accessing Data Storage every iteration would be very expensive
+                // NOTE: DO NOT USE THIS CODE IN PRODUCTION!!
+                file.Bytes += len;
+                UpdateFileDetails(file);
+                // END NOTE
+              }
+            }
+          }
+        }
 
         file.FinishedAt = DateTimeOffset.Now;
         UpdateFileDetails(file);

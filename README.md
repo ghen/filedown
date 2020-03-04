@@ -72,6 +72,10 @@ Supported settings:
 
 Structured logs are sent to console (in console mode only), as well as saved to local file system as instructed in **./nlog.config** file. Application should also be configured to have sufficient privileges to access logs files location.
 
+Sample console output is shown bellow:
+
+![Console Output](/doc/Console Output.png)
+
 ## REST API
 
 HTTP REST API provided to all supporting clients.
@@ -149,7 +153,7 @@ Requests job status and file(s) download stats.
 Request:
 
 ```
-GET /api/jobs/E1HKfn68Pkms5zsZsvKONw HTTP/1.1
+GET /api/jobs/Vgjzu0q9SBqLFNJv0m13dw HTTP/1.1
 Accept: application/json
 ```
 
@@ -162,41 +166,42 @@ Content-Type: application/json; charset=utf-8
 
 ```json
 {
-  "id": "E1HKfn68Pkms5zsZsvKONw==",
-  "status": "Processing",
-  "threads": 5,
-  "files": [
-    { 
-      "filename": "picture.jpg", 
-      "link": "http://example.com/image.jpg",
-      "started": "2020-03-03T15:27:50.034+03:00",
-      "finished": "2020-03-03T15:27:53.345+03:00",
-      "size": 1024,
-      "bytes": 1024
-    },
-    {
-      "filename": "archive1.zip",
-      "link": "http://example.com/archive.zip",
-      "started": "2020-03-03T15:27:50.123+03:00",
-      "finished": "2020-03-03T15:27:53.354+03:00",
-      "size": 10240,
-      "error": "HTTP 404 - Not Found"
-    },
-    {
-      "filename": "archive2.zip",
-      "link": "http://example.com/archive.zip",
-      "started": "2020-03-03T15:27:50.678+03:00",
-      "size": 10240,
-    }
-  ]
+   "id":"Vgjzu0q9SBqLFNJv0m13dw",
+   "status":"Processing",
+   "threads":5,
+   "files":[
+      {
+         "filename":"Solar System.jpg",
+         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg",
+         "started":"2020-03-05T01:30:43.916+03:00",
+         "finished":"2020-03-05T01:31:03.620+03:00",
+         "size":83327,
+         "bytes":83327
+      },
+      {
+         "filename":"Bypass Capacitors.pdf",
+         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf",
+         "started":"2020-03-05T01:30:43.916+03:00",
+         "size":549158,
+         "bytes":171128
+      },
+      {
+         "filename":"Ops.tmp",
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Ops.tmp",
+         "started":"2020-03-05T01:30:43.917+03:00",
+         "finished":"2020-03-05T01:30:44.982+03:00",
+         "size":0,
+         "error":"Response status code does not indicate success: 404 (Not Found)."
+      }
+   ]
 }
 ```
 
 **Note:**
 > As shown in the example above:
-> * **picture.jpg** has been downloaded successfully
-> * **archive1.zip** download failed with error
-> * **archive2.zip** download is still in progress
+> * **Solar System.jpg** has been downloaded successfully
+> * **Bypass Capacitors.pdf** download is still in progress
+> * **Ops.tmp** download failed with error
 
 ### [POST] /jobs
 
@@ -230,9 +235,18 @@ Content-Type: application/json
 {
   "threads": 5,
   "links": [
-    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
-    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://example.com/archive.zip" }
+    { 
+      "filename": "Solar System.jpg",
+      "link": "https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg"
+    },
+    { 
+      "filename": "Bypass Capacitors.pdf",
+      "link": "https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf"
+    },
+    { 
+      "filename": "Ops.tmp",
+      "link": "https://github.com/ghen/filedown/raw/master/test/resources/Ops.tmp"
+    }
   ]
 }
 ```
@@ -249,13 +263,22 @@ Content-Type: application/json; charset=utf-8
 
 ```json
 {
-  "id": "E1HKfn68Pkms5zsZsvKONw",
-  "status": "Created",
-  "threads": 5,
-  "files": [
-    { "filename": "picture.jpg", "link": "http://example.com/image.jpg" },
-    { "filename": "archive1.zip", "link": "http://example.com/archive.zip" },
-    { "filename": "archive2.zip", "link": "http://example.com/archive.zip" }
-  ]
+   "id":"Vgjzu0q9SBqLFNJv0m13dw",
+   "status":"Created",
+   "threads":5,
+   "files":[
+      {
+         "filename":"Solar System.jpg",
+         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Solar System.jpg"
+      },
+      {
+         "filename":"Bypass Capacitors.pdf",
+         "link":"https://github.com/ghen/filedown/raw/development/test/resources/Bypass Capacitors.pdf"
+      },
+      {
+         "filename":"Ops.tmp",
+         "link":"https://github.com/ghen/filedown/raw/master/test/resources/Ops.tmp"
+      }
+   ]
 }
 ```
