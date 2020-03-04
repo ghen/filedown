@@ -34,14 +34,25 @@ Application can be installed as a local service using scripts provided in **./sc
 
 ## Configuration
 
-Application can be configured in all supported **.NET Core 3.1** manners. The easiest way would be to alter **./filedown.json** file:
+Application can be configured in all supported **.NET Core 3.1** manners. The easiest way would be to alter **./webhost.json** and **./services.json** files:
+
+[services.json]
 
 ```json
 {
-  "url": "http://localhost:8080/api",
-  "jobs": 3,
-  "threads": 3,
-  "downloads": "./downloads"
+  "FileDownload" : {
+    "jobs": 3,
+    "threads": 3,
+    "downloads": "./downloads"
+  }
+}
+```
+
+[webhost.json]
+
+```json
+{
+  "urls": "http://localhost:8080/api"
 }
 ```
 
@@ -49,7 +60,7 @@ Supported settings:
 
 | Path			     | Required | Type        | Description |
 | -------------- |:--------:|:-----------:| ----------- |
-| **url**	       | Req      | String(1024) | HTTP REST API path to listen for incoming WEB requests for. |
+| **urls**	     | Req      | String(1024) | HTTP REST API path to listen for incoming WEB requests for. |
 | **jobs**	     | Req      | Number      | Number of maximum allowed parallel jobs. |
 | **threads**    | Req      | Number      | Default number of threads per job. |
 | **downloads**  | Req      | String(1024) | Path to the local folder to save downloaded files into. |

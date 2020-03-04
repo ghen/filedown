@@ -5,6 +5,7 @@ using System.Reflection;
 using FileDownload.Api;
 using FileDownload.Data;
 using FileDownload.Extensions;
+using FileDownload.Services;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,7 +69,7 @@ namespace FileDownload.WinService {
             .Configure<HostOptions>(hostContext.Configuration.GetSection("Host")))
           .ConfigureDataProviders()
           .ConfigureApiHost()
-          // .ConfigureServicesHost()
+          .ConfigureServicesHost()
           .ConfigureAppConfiguration((_, config) => config
             .AddCommandLine(args));
 

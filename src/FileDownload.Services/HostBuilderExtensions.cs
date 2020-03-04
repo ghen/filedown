@@ -1,10 +1,10 @@
 ﻿using System;
 
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace FileDownload.Api {
+namespace FileDownload.Services {
 
   #region [HostBuilderExtensions type definition]
 
@@ -18,7 +18,7 @@ namespace FileDownload.Api {
   /// </remarks>
   public static class HostBuilderExtensions {
 
-    #region ConfigureApiHost
+    #region ConfigureServicesHost
 
     /// <summary>
     /// Configures host to run REST API Server.
@@ -26,30 +26,29 @@ namespace FileDownload.Api {
     /// <param name="hostBuilder">Host builder to configure.</param>
     /// <exception cref="ArgumentNullException">Throws if <paramref name="hostBuilder"/> is not set (<value>null</value>).</exception>
     /// <returns>Source <seealso cref="IWebHostBuilder"/> to support methods chaining.</returns>
-    public static IWebHostBuilder ConfigureApiHost(this IWebHostBuilder hostBuilder)
-      => throw new NotImplementedException();
-
-    /// <summary>
-    /// Configures host to run REST API Server.
-    /// </summary>
-    /// <param name="hostBuilder">Host builder to configure.</param>
-    /// <exception cref="ArgumentNullException">Throws if <paramref name="hostBuilder"/> is not set (<value>null</value>).</exception>
-    /// <returns>Source <seealso cref="IWebHostBuilder"/> to support methods chaining.</returns>
-    public static IHostBuilder ConfigureApiHost(this IHostBuilder hostBuilder) {
+    public static IHostBuilder ConfigureServicesHost(this IHostBuilder hostBuilder) {
       if (hostBuilder == null) throw new ArgumentNullException(nameof(hostBuilder));
 
       hostBuilder
-        .ConfigureWebHostDefaults(webBuilder => webBuilder
-          .ConfigureAppConfiguration((hostContext, config) => config
-            .AddJsonFile("webhost.json", optional: false)
-            .AddJsonFile($"webhost.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true))
-            .UseStartup<Startup>()
-        );
+        .ConfigureAppConfiguration((hostContext, config) => config
+          .AddJsonFile("services.json", optional: false)
+          .AddJsonFile($"services.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true))
+        .ConfigureServices((_, services) => {
+          services.AddSingleton(ctx =>
+            ctx
+              .GetRequiredService<IConfiguration>()
+              .GetSection(nameof(FileDownloadService).Replace("Service", String.Empty))
+              .Get<FileDownloadServiceSettings>(config => config.BindNonPublicProperties = true)
+              ?? new FileDownloadServiceSettings()  
+          );
+          services.AddScoped<FileDownloadService>();
+          services.AddHostedService<HostedService<FileDownloadService>>();
+        });
 
       return hostBuilder;
     }
 
-    #endregion ConfigureApiHost
+    #endregion ConfigureServicesHost
 
   }
 

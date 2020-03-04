@@ -1,0 +1,7 @@
+﻿{
+  "FileDownload": {
+    "jobs": 3,
+    "threads": 3,
+    "downloads": "./downloads"
+  }
+}
