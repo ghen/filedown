@@ -33,7 +33,7 @@ namespace FileDownload.Data {
       hostBuilder
         .ConfigureServices((hostContext, services) => {
           services
-            .AddScoped<DbContext>(serviceProvider => {
+            .AddTransient<DbContext>(serviceProvider => {
               var assembly = Assembly.GetAssembly(typeof(HostBuilderExtensions));
               var options = new DbContextOptionsBuilder<AppDb>()
                 // NOTE: For the purpose of this demo application we are going to use in-memory database

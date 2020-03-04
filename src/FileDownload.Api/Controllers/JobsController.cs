@@ -1,11 +1,13 @@
 ﻿
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 using FileDownload.Api.Models;
 using FileDownload.Data;
+using FileDownload.Extensions;
 using FileDownload.Types;
 
 using Microsoft.AspNetCore.Http;
@@ -25,6 +27,7 @@ namespace FileDownload.Api.Controllers {
     #region Private members
 
     private readonly DbContext _context;
+    private readonly BlockingCollection<Job> _queue;
 
     #endregion Private members
 
@@ -34,9 +37,11 @@ namespace FileDownload.Api.Controllers {
     /// Constructs new <see cref="JobsController"/> instance.
     /// </summary>
     /// <param name="context">Data access context.</param>
+    /// <param name="queue">(Optionla) <seealso cref="Job"/>(s) processing queue.</param>
     /// <param name="logger">(Optional) Logger to send disagnostic messages to.</param>
-    public JobsController(DbContext context, ILogger<JobsController> logger = null) : base(logger) {
+    public JobsController(DbContext context, BlockingCollection<Job> queue = null, ILogger<JobsController> logger = null) : base(logger) {
       this._context = context ?? throw new ArgumentNullException(nameof(context));
+      this._queue = queue;
     }
 
     #endregion Constructor and Initialization
@@ -125,6 +130,13 @@ namespace FileDownload.Api.Controllers {
 
         throw;
       }
+
+      // HACK: Simplified Job(s) queue integration.
+      // NOTE: DO NOTE USE THIS CODE IN PRODUCTION!!
+      var queue = this._queue;
+      if (queue != null && !queue.TryAdd(job, TimeSpan.FromMilliseconds(500)))
+        Log.Warn("Job {id} has been created, but was not queued for processing and will be ignored.", job.Id);
+      // END HACK
 
       //
       // Report result

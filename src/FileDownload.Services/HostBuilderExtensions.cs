@@ -1,5 +1,7 @@
 ﻿using System;
-
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using FileDownload.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +36,11 @@ namespace FileDownload.Services {
           .AddJsonFile("services.json", optional: false)
           .AddJsonFile($"services.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true))
         .ConfigureServices((_, services) => {
+
+          // NOTE: For the purpose of this sample application we would use the simplest available
+          //       producer-consumer queue implementation.
+          services.AddSingleton(new BlockingCollection<Job>());
+
           services.AddSingleton(ctx =>
             ctx
               .GetRequiredService<IConfiguration>()
@@ -43,6 +50,7 @@ namespace FileDownload.Services {
           );
           services.AddScoped<FileDownloadService>();
           services.AddHostedService<HostedService<FileDownloadService>>();
+
         });
 
       return hostBuilder;

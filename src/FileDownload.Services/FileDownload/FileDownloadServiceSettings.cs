@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace FileDownload.Services {
@@ -12,10 +13,25 @@ namespace FileDownload.Services {
   public sealed class FileDownloadServiceSettings : AppServiceSettings {
 
     /// <summary>
-    /// (Optional) Display name.
+    /// Number of maximum allowed parallel jobs.
     /// </summary>
-    //[DataMember(Name = "name")]
-    //public String Name { get; private set; }
+    [DataMember(Name = "jobs")]
+    [Range(0, 24)]
+    public Int32 Jobs { get; private set; } = 3;
+
+    /// <summary>
+    /// Default number of threads per job.
+    /// </summary>
+    [DataMember(Name = "threads")]
+    [Range(0, 24)]
+    public Int32 Threads { get; private set; } = 5;
+
+    /// <summary>
+    /// Path to the local folder to store downloaded files.
+    /// </summary>
+    [DataMember(Name = "downloads")]
+    [Required, MaxLength(1024)]
+    public String Downloads { get; private set; }
 
   }
 

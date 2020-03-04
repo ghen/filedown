@@ -63,7 +63,7 @@ Supported settings:
 | **urls**	     | Req      | String(1024) | HTTP REST API path to listen for incoming WEB requests for. |
 | **jobs**	     | Req      | Number      | Number of maximum allowed parallel jobs. |
 | **threads**    | Req      | Number      | Default number of threads per job. |
-| **downloads**  | Req      | String(1024) | Path to the local folder to save downloaded files into. |
+| **downloads**  | Req      | String(1024) | Path to the local folder to store downloaded files. |
 
 ## Logs
 
